@@ -108,7 +108,7 @@ def render_game(screen, font):
                 pygame.draw.circle(screen, color, (tube.centerx, tube.y + y_offset), BALL_RADIUS)
                 y_offset -= BALL_RADIUS * 2 + 10
 
-    if game_state_dict.get("solved", False):
+    if game_state_dict.get("solved", "false") == "true":
         congrats_text = font.render("You Won!", True, BLACK)
         screen.blit(congrats_text, (screen_width // 2 - congrats_text.get_width() // 2, screen_height // 2 - congrats_text.get_height() // 2))
 
@@ -126,7 +126,7 @@ def handle_mouse_input():
     mouse_pos = pygame.mouse.get_pos()
     mouse_click = pygame.mouse.get_pressed()
 
-    if not game_state_dict.get("solved", False):
+    if game_state_dict.get("solved", "false") == "false":
         # Check for mouse press
         if mouse_click[0] and not handle_mouse_input.was_pressed:  # Mouse press detected
             handle_mouse_input.was_pressed = True
@@ -142,7 +142,7 @@ def handle_mouse_input():
                             print(f"Emitting move for tube {i}")
                             sio.emit("mover_volita", {"room_id": input_text[0], "source_index": selected_tube, "destination_index": i})
                             if check_solved():
-                                sio.emit("game_state", {"room_id": input_text[0]})
+                                sio.emit("solved", {"room_id": input_text[0]})
                         selected_tube = None
 
         # Check for mouse release
