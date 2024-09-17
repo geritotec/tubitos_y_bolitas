@@ -30,11 +30,13 @@
 
 ## Estructura del servidor
 
+* server.py
+
 ### flask-socketio backend
 
 El servidor se utiliza únicamente para la sincronización de datos de diferentes clientes en modo multijugador. El cliente se actualiza por medio de websockets distribuidos en cuartos (rooms).
 
 > ### Advertencia! 
 > Para que el modo multijugador funcione, se tiene que inicializar el servidor
-> ```$ python server/server.py```
+> ```$ python server.py```
 > En caso de querer conectar distintos dispositivos, se tiene que ajustar respectivamente la ip del servidor en screens/room_selection.py > connect_socket()
