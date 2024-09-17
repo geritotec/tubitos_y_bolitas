@@ -23,7 +23,7 @@ difficulty = 1
 
 def connect_socket():
     try:
-        sio.connect('http://localhost:5000')
+        sio.connect('http://10.49.187.179:5000')
         print('Connecting to server...')
         join_room()
     except Exception as e:
