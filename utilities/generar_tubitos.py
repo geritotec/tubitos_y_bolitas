@@ -36,6 +36,6 @@ def generar_tubitos(difficulty):
     return tubitos
 
 if __name__ == "__main__":
-    tubitos = generar_tubitos(1)
+    tubitos = generar_tubitos(3)
     for tubito in tubitos:
         print(tubito)

@@ -1,7 +1,6 @@
 import pygame
 from components.button import draw_button
 
-# Define button sizes and colors
 WHITE = (255, 255, 255)
 GRAY = (200, 200, 200)
 DARK_GRAY = (100, 100, 100)
