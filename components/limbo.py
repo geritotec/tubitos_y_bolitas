@@ -1,4 +1,6 @@
-import pygame
+import pygame, sys
+from components.text_shadow import draw_text_with_shadow
+from components.button import draw_button
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -10,80 +12,104 @@ TUBE_WIDTH = 60
 TUBE_HEIGHT = 20
 FALL_SPEED = 5  # Speed at which the ball falls
 
-def limbo(screen, font, goBack, tubitos):
-    screen_width, screen_height = screen.get_size()
 
-    # Initial positions
-    ball_x = screen_width // 2
-    ball_y = screen_height // 2
-    ball_moving_left = False
-    ball_falling = False
+def draw_translucent_rect(screen, color, rect, opacity):
+    surface = pygame.Surface(rect.size, pygame.SRCALPHA)
+    surface.fill((*color, opacity)) 
+    screen.blit(surface, rect.topleft)
 
-    tube_x = (screen_width - TUBE_WIDTH) // 2
-    tube_y = screen_height - 100
 
-    def move_ball():
-        nonlocal ball_x, ball_moving_left
-        if ball_moving_left:
-            ball_x -= 5
-            if ball_x - BALL_RADIUS <= 0:
-                ball_moving_left = False
-        else:
-            ball_x += 5
-            if ball_x + BALL_RADIUS >= screen_width:
-                ball_moving_left = True
+def limbo(screen, switch_screen, font, screen_width, screen_height, actual, vidas):
 
-    def trigger_ball_fall():
-        nonlocal ball_falling
-        ball_falling = True
+    background = pygame.image.load('static/luna_bien.jpeg')  
+    mariachi_img = pygame.image.load('static/mariachihum.png')  
+    game_over_img = pygame.image.load('static/final.jpg')  
+    cursor_img = pygame.transform.scale(mariachi_img, (40, 50))  
 
-    def check_win_or_lose():
-        nonlocal ball_y
-        # Check if the ball has reached the tube level
-        if ball_y + BALL_RADIUS >= tube_y:
-            if tube_x <= ball_x <= tube_x + TUBE_WIDTH:
-                won_text = font.render("Ganaste, tendrás otra oportunidad", True, BLACK)
-                screen.blit(won_text, (screen_width // 2 - won_text.get_width() // 2, 35))
-            else:
-                lost_text = font.render("Perdiste", True, BLACK)
-                screen.blit(lost_text, (screen_width // 2 - lost_text.get_width() // 2, 35))
+    background = pygame.transform.scale(background, (screen_width, screen_height))
+    mariachi_img = pygame.transform.scale(mariachi_img, (60, 70)) 
+    game_over_img = pygame.transform.scale(game_over_img, (screen_width, 200))  
 
-    # Event loop and ball movement logic
-    running = True
-    while running:
-        screen.fill(WHITE)
+    bar_width, bar_height = 500, 50
+    bar_x, bar_y = (screen_width - bar_width) // 2, (screen_height - bar_height) // 2
 
-        # Drawing "Limbo" text at the top
-        limbo_text = font.render("Limbo", True, BLACK)
-        screen.blit(limbo_text, (screen_width // 2 - limbo_text.get_width() // 2, 20))
+    cursor_width, cursor_height = 40, 50 
+    cursor_x = bar_x
+    cursor_speed = 10  
 
-        # Move the ball if it's not falling
-        if not ball_falling:
-            move_ball()
+    hit_zone_left = bar_x + bar_width // 4
+    hit_zone_right = hit_zone_left + bar_width // 7
 
-        # Draw the moving ball
-        pygame.draw.circle(screen, BALL_COLOR, (ball_x, ball_y), BALL_RADIUS)
+    red_bar_width = bar_width // 7
+    red_bar_x = bar_x + bar_width // 4 
 
-        # Ball falling logic
-        if ball_falling:
-            ball_y += FALL_SPEED
-            if ball_y + BALL_RADIUS >= screen_height:  # Ball hits the bottom
-                check_win_or_lose()
+    font = pygame.font.SysFont(None, 40)
+    font_large = pygame.font.SysFont(None, 80)
 
-        # Draw the tube
-        pygame.draw.rect(screen, TUBE_COLOR, (tube_x, tube_y, TUBE_WIDTH, TUBE_HEIGHT))
+    hit = False
+    lives = 3 
+    game_over = False
+    congratulations = False
+    message = ""  
 
-        # Update the display
-        pygame.display.flip()
 
-        # Handle events
+
+    while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:  # Press space to drop the ball
-                    trigger_ball_fall()
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN and not game_over:
+                if hit_zone_left < cursor_x < hit_zone_right:
+                    hit = True
+                    congratulations = True  
 
-        # Frame rate control
+                else:
+                    hit = False
+                    lives -= 1 
+                    message = "¡Miss!" 
+
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if (screen_width // 2 - 50 < mouse_x < screen_width // 2 + 50) and (screen_height // 2 + 40 < mouse_y < screen_height // 2 + 80):
+                    print("Volver al menú") 
+                    pygame.mouse.set_visible(True) 
+                    pygame.mouse.set_cursor(pygame.cursors.Cursor(pygame.cursors.compile(pygame.image.tostring(cursor_img, "RGBA"))))
+
+
+        screen.blit(background, (0, 0))
+
+        if not game_over:
+            if not congratulations:
+                draw_translucent_rect(screen, (255, 255, 255), pygame.Rect(bar_x, bar_y, bar_width, bar_height), 180)  
+                
+                draw_translucent_rect(screen, (255, 0, 0), pygame.Rect(red_bar_x, bar_y, red_bar_width, bar_height), 180) 
+                
+                screen.blit(mariachi_img, (cursor_x, bar_y))
+
+                cursor_x += cursor_speed
+                if cursor_x > bar_x + bar_width - cursor_width or cursor_x < bar_x:
+                    cursor_speed *= -1
+
+                if message:
+                    message_color = (255, 255, 0) if message == "¡Fallaste!" else (255, 255, 255)  
+                    draw_text_with_shadow(screen, message, font, message_color, (100, 100, 100), screen_width // 2 - 40, screen_height - 70)
+
+                draw_text_with_shadow(screen, f"Lives: {lives}", font, (255, 255, 255), (100, 100, 100), 20, 20)
+
+                if lives <= 0:
+                    game_over = True
+            else:
+                actual[0] = "main_game"
+                return
+        else:
+            screen.blit(game_over_img, (0, 0))
+            draw_text_with_shadow(screen, "Game Over", font_large, (0, 255, 255), (0, 0, 0), screen_width // 2 - 150, screen_height // 2 - 40)
+            draw_button(screen, "Menu", screen_width // 2 - 50, screen_height // 2 + 40, 100, 40, TUBE_COLOR, WHITE, font, action=lambda:menu(switch_screen))
+
+        pygame.display.update()
+
         pygame.time.Clock().tick(60)
 
+def menu(switch_screen):
+    switch_screen("main_menu")

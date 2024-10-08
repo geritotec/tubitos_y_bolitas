@@ -1,5 +1,5 @@
 import pygame
-import socketio  # Import SocketIO client
+import socketio 
 from components.button import draw_button
 from components.input_field import draw_input
 from utilities.mover_bolita import mover_bolita
