@@ -1,4 +1,5 @@
 import pygame, sys, os
+from components.button import draw_button
 from utilities.generar_tubitos import generar_tubitos
 from utilities.mover_bolita import mover_bolita
 
@@ -12,13 +13,28 @@ TUBE_WIDTH, TUBE_HEIGHT = 60, 220
 TUBE_MARGIN = 20
 BALLS_PER_COLOR = 4
 
+
 def reto_easy_mode(screen, switch_screen, font):
     screen_width, screen_height = pygame.display.get_surface().get_size()
-
-    # Generate the tubes and balls using the provided difficulty
     tubitos = generar_tubitos(1)
-    
-    # Define the color mapping for balls
+    vidas = [3]
+    actual = ["main_game"]
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return
+
+        if actual[0] == "main_game":
+            main_game(screen, font, screen_width, screen_height, tubitos, actual, vidas)
+        elif actual[0] == "limbo":
+            limbo(screen, font, screen_width, screen_height, actual, vidas)
+
+        pygame.display.flip()  # Update the full display surface to the screen
+
+
+def main_game(screen, font, screen_width, screen_height, tubitos, actual, vidas):
     color_map = {
         "rosa": (255, 192, 203),
         "amarillo": (255, 255, 0),
@@ -66,7 +82,18 @@ def reto_easy_mode(screen, switch_screen, font):
                                 if check_solved():
                                     solved = True
                                     print("Solved is set to true")
+                            
+                            else:
+                                print("mal movimiento")
+                                if vidas[0] > 1:
+                                    vidas[0] -= 1
+                                    print("Vidas: ", vidas[0])
+                                else:
+                                    actual[0] = "limbo"
+                                    return
                             selected_tube = None
+                            
+                            
 
         # Draw tubes
         for tube in tubes:
@@ -93,3 +120,19 @@ def reto_easy_mode(screen, switch_screen, font):
             screen.blit(congrats_text, (screen_width // 2 - congrats_text.get_width() // 2, screen_height // 2 - congrats_text.get_height() // 2))
 
         pygame.display.flip()
+
+def limbo(screen, font, screen_width, screen_height, actual, vidas):
+    def volver():
+        actual[0] = "main_game"
+        return 
+    
+    screen.fill(BLACK)  # Clear the screen with white
+
+    button_width, button_height = 200, 50
+    won_button_pos = (screen_width // 2 - button_width // 2, screen_height // 2 - button_height // 2 - 60)
+    lost_button_pos = (screen_width // 2 - button_width // 2, screen_height // 2 + 10)
+
+    draw_button(screen, "You Won", won_button_pos[0], won_button_pos[1], button_width, button_height, BLACK, GRAY, font, action=volver)
+    draw_button(screen, "You Lost", lost_button_pos[0], lost_button_pos[1], button_width, button_height, BLACK, GRAY, font)
+
+    pygame.display.flip()

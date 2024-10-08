@@ -99,14 +99,33 @@ def render_game(screen, font):
         "checker_naranja": (255, 140, 0)
     }
 
-    for i, tube in enumerate(tubes):
+    # for i, tube in enumerate(tubes):
+    #     pygame.draw.rect(screen, GRAY, tube, 2)
+    #     y_offset = TUBE_HEIGHT - BALL_RADIUS * 2
+    #     for ball_color in tubitos[i]:
+    #         if ball_color != "nada":
+    #             color = color_map.get(ball_color, BLACK)
+    #             pygame.draw.circle(screen, color, (tube.centerx, tube.y + y_offset), BALL_RADIUS)
+    #             y_offset -= BALL_RADIUS * 2 + 10
+    # Draw tubes
+    for tube in tubes:
         pygame.draw.rect(screen, GRAY, tube, 2)
+        
+    # Draw balls
+    for i, tube in enumerate(tubes):
         y_offset = TUBE_HEIGHT - BALL_RADIUS * 2
-        for ball_color in tubitos[i]:
+        # Render balls in the tube, except the selected one
+        for ball_idx, ball_color in enumerate(tubitos[i]):
             if ball_color != "nada":
                 color = color_map.get(ball_color, BLACK)
-                pygame.draw.circle(screen, color, (tube.centerx, tube.y + y_offset), BALL_RADIUS)
-                y_offset -= BALL_RADIUS * 2 + 10
+                if selected_tube == i and ball_idx == len(tubitos[i]) - tubitos[i].count("nada") - 1:  
+                    # This is the selected top ball in the selected tube
+                    pygame.draw.circle(screen, color, (tube.centerx, tube.y - BALL_RADIUS - 10), BALL_RADIUS)
+                else:
+                    # Draw balls in the tube
+                    pygame.draw.circle(screen, color, (tube.centerx, tube.y + y_offset), BALL_RADIUS)
+                y_offset -= BALL_RADIUS * 2 + 10  # Spacing between balls
+
 
     if game_state_dict.get("solved", "false") == "true":
         congrats_text = font.render("You Won!", True, BLACK)

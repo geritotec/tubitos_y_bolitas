@@ -9,7 +9,7 @@ def mover_bolita(tubitos, source_index, destination_index):
             break
     
     if source_ball is None:
-        return False 
+        return False # El jugador seleccionó un tubito vacío
 
     destination_ball = None
     for ball in reversed(destination_tube):
@@ -26,7 +26,7 @@ def mover_bolita(tubitos, source_index, destination_index):
                 source_tube[i] = "nada"
                 break
         
-        for i in range(len(destination_tube) - 1, -1, -1):
+        for i in range(len(destination_tube)):
             if destination_tube[i] == "nada":
                 destination_tube[i] = source_ball
                 break

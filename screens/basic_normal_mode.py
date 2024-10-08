@@ -78,11 +78,16 @@ def basic_normal_mode(screen, switch_screen, font):
         # Draw balls
         for i, tube in enumerate(tubes):
             y_offset = TUBE_HEIGHT - BALL_RADIUS * 2
-            for ball_color in tubitos[i]:
+            # Render balls in the tube, except the selected one
+            for ball_idx, ball_color in enumerate(tubitos[i]):
                 if ball_color != "nada":
-                    # Use the color from the color_map
-                    color = color_map.get(ball_color, BLACK)  # Default to BLACK if color not found
-                    pygame.draw.circle(screen, color, (tube.centerx, tube.y + y_offset), BALL_RADIUS)
+                    color = color_map.get(ball_color, BLACK)
+                    if selected_tube == i and ball_idx == len(tubitos[i]) - tubitos[i].count("nada") - 1:  
+                        # This is the selected top ball in the selected tube
+                        pygame.draw.circle(screen, color, (tube.centerx, tube.y - BALL_RADIUS - 10), BALL_RADIUS)
+                    else:
+                        # Draw balls in the tube
+                        pygame.draw.circle(screen, color, (tube.centerx, tube.y + y_offset), BALL_RADIUS)
                     y_offset -= BALL_RADIUS * 2 + 10  # Spacing between balls
 
         # Display the "solved" message

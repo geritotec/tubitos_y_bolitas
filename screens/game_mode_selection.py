@@ -27,8 +27,7 @@ def start_basic_mode(switch_screen):
     switch_screen("select_difficulty_basic")
 
 def start_time_limit_mode(switch_screen):
-    # Implement starting time limit mode
-    pass
+    switch_screen("select_difficulty_reto")
 
 def start_multiplayer_mode(switch_screen):
     switch_screen("room_selection")
