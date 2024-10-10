@@ -10,7 +10,7 @@ from screens.select_difficulty_reto import select_difficulty_reto
 from screens.settings import settings
 from screens.game_mode_selection import game_mode_selection
 from screens.reto_easy_mode import reto_easy_mode
-#from screens.room_selection import room_selection
+from screens.room_selection import room_selection
 
 pygame.init()
 original_width, original_height = 2, 1

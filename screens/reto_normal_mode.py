@@ -1,9 +1,8 @@
-
-
 import pygame, sys, os
 from components.button import draw_button
 from utilities.generar_tubitos import generar_tubitos
 from utilities.mover_bolita import mover_bolita
+from components.limbo import limbo
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -31,7 +30,7 @@ def reto_normal_mode(screen, switch_screen, font):
         if actual[0] == "main_game":
             main_game(screen, font, screen_width, screen_height, tubitos, actual, vidas)
         elif actual[0] == "limbo":
-            limbo(screen, font, screen_width, screen_height, actual, vidas)
+            limbo(screen, switch_screen, font, screen_width, screen_height, actual, vidas)
 
         pygame.display.flip()  # Update the full display surface to the screen
 
@@ -122,19 +121,3 @@ def main_game(screen, font, screen_width, screen_height, tubitos, actual, vidas)
             screen.blit(congrats_text, (screen_width // 2 - congrats_text.get_width() // 2, screen_height // 2 - congrats_text.get_height() // 2))
 
         pygame.display.flip()
-
-def limbo(screen, font, screen_width, screen_height, actual, vidas):
-    def volver():
-        actual[0] = "main_game"
-        return 
-    
-    screen.fill(BLACK)  # Clear the screen with white
-
-    button_width, button_height = 200, 50
-    won_button_pos = (screen_width // 2 - button_width // 2, screen_height // 2 - button_height // 2 - 60)
-    lost_button_pos = (screen_width // 2 - button_width // 2, screen_height // 2 + 10)
-
-    draw_button(screen, "You Won", won_button_pos[0], won_button_pos[1], button_width, button_height, BLACK, GRAY, font, action=volver)
-    draw_button(screen, "You Lost", lost_button_pos[0], lost_button_pos[1], button_width, button_height, BLACK, GRAY, font)
-
-    pygame.display.flip()
