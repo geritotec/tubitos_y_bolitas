@@ -13,17 +13,9 @@ from screens.reto_easy_mode import reto_easy_mode
 from screens.room_selection import room_selection
 
 pygame.init()
-original_width, original_height = 2, 1
+WIDTH, HEIGHT = 960, 540  # Window dimensions
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-# Scaled-up window size
-scale_factor = 500  # You can adjust this for your needs
-scaled_width, scaled_height = original_width * scale_factor, original_height * scale_factor
-
-# Create the window at the scaled-up size
-screen = pygame.display.set_mode((scaled_width, scaled_height))
-
-# Create a smaller surface for pixel art resolution
-pixel_art_surface = pygame.Surface((original_width, original_height))
 # Load the font once
 try:
     custom_font = pygame.font.Font('./public/fonts/pixelart.ttf', 18)
@@ -35,7 +27,7 @@ except FileNotFoundError:
 clock = pygame.time.Clock()
 
 running = True
-current_screen = 'main_menu'
+current_screen = 'reto_hard_mode'
 
 def switch_screen(screen_name):
     global current_screen
