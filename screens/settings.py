@@ -1,4 +1,3 @@
-import pygame
 from components.button import draw_button
 
 WHITE = (255, 255, 255)

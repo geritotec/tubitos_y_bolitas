@@ -13,21 +13,18 @@ from screens.reto_easy_mode import reto_easy_mode
 from screens.room_selection import room_selection
 
 pygame.init()
-WIDTH, HEIGHT = 960, 540  # Window dimensions
+WIDTH, HEIGHT = 960, 540
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-# Load the font once
 try:
     custom_font = pygame.font.Font('./public/fonts/pixelart.ttf', 18)
 except FileNotFoundError:
-    print("Custom font not found. Using default font.")
-    custom_font = pygame.font.Font(None, 18)  # Fallback to default font
+    custom_font = pygame.font.Font(None, 18)  
 
-# Initialize clock for FPS control
 clock = pygame.time.Clock()
 
 running = True
-current_screen = 'reto_hard_mode'
+current_screen = 'main_menu'
 
 def switch_screen(screen_name):
     global current_screen
@@ -38,9 +35,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    screen.fill((0, 0, 0))  # Clear the screen with black
+    screen.fill((0, 0, 0))  
 
-    # Draw the current screen
     if current_screen == 'main_menu':
         main_menu(screen, switch_screen, custom_font)
     elif current_screen == 'settings':
@@ -55,8 +51,8 @@ while running:
         basic_normal_mode(screen, switch_screen, custom_font)
     elif current_screen == "basic_hard_mode":
         basic_hard_mode(screen, switch_screen, custom_font)
-    #elif current_screen == "room_selection":
-    #    room_selection(screen, switch_screen, custom_font)
+    elif current_screen == "room_selection":
+        room_selection(screen, switch_screen, custom_font)
     elif current_screen == "reto_easy_mode":
         reto_easy_mode(screen, switch_screen, custom_font)
     elif current_screen == "select_difficulty_reto":

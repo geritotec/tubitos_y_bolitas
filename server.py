@@ -1,6 +1,5 @@
 from flask import Flask, request
-from flask_socketio import SocketIO, emit, join_room, leave_room, send
-import random
+from flask_socketio import SocketIO, emit, join_room
 
 from utilities.generar_tubitos import generar_tubitos
 from utilities.mover_bolita import mover_bolita
@@ -47,7 +46,7 @@ def mover_volita(data):
 
     emit("game_state", game_states[room], room=room)
 
-@socketio.on("solved") # terminar
+@socketio.on("solved")
 def solved(data):
     room = data["room_id"]
 
