@@ -49,9 +49,7 @@ def limbo(screen, switch_screen, font, screen_width, screen_height, actual, vida
     red_bar_width = bar_width // 7
     red_bar_x = bar_x + bar_width // 4 
 
-    font_large = pygame.font.SysFont(None, 80)
 
-    hit = False
     lives = 1 
     game_over = False
     congratulations = False
@@ -69,18 +67,7 @@ def limbo(screen, switch_screen, font, screen_width, screen_height, actual, vida
                     hit = False
                     lives -= 1  
             
-            if game_over:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        sys.exit()
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        mouse_x, mouse_y = event.pos
-                        if (screen_width // 2 - 50 <= mouse_x <= screen_width // 2 + 50) and \
-                        (screen_height // 2 + 40 <= mouse_y <= screen_height // 2 + 80):  # Adjust button coordinates
-                            switch_screen("main_menu")
-
-
+           
         screen.blit(background, (0, 0))
 
         if not game_over:
@@ -100,9 +87,7 @@ def limbo(screen, switch_screen, font, screen_width, screen_height, actual, vida
                 actual[0] = "main_game"
                 return
         else:
-            screen.blit(game_over_img, (0, 0))
-            draw_text_with_shadow(screen, "Game Over", font_large, (0, 255, 255), (0, 0, 0), screen_width // 2 - 150, screen_height // 2 - 40)
-            draw_button(screen, "Menu", screen_width // 2 - 50, screen_height // 2 + 40, 100, 40, TUBE_COLOR, WHITE, font, action=lambda: switch_screen("main_menu"))
+            draw_text_with_shadow(screen, "Perdiste", font, (255, 255, 255), (0, 0, 0), screen_width // 2 - 150, screen_height // 2 - 40)
 
         pygame.display.update()
         pygame.time.Clock().tick(60)
