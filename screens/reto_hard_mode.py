@@ -59,12 +59,14 @@ def reto_hard_mode(screen, switch_screen, font):
         if actual[0] == "main_game":
             main_game(screen, font, screen_width, screen_height, tubitos, actual, vidas)
         elif actual[0] == "limbo":
-            limbo(screen, switch_screen, font, screen_width, screen_height, actual, vidas)
+            limbo(screen, switch_screen, font, screen_width, screen_height, actual, vidas, 3)
 
         pygame.display.flip() 
 
 
 def main_game(screen, font, screen_width, screen_height, tubitos, actual, vidas):
+    pygame.mixer.init() 
+    pygame.mixer.music.load("static/lallorona.mp3")  
 
     mariachis_image = pygame.image.load("static/mariachis_asleep_11.png")
     mariachis_win_image = pygame.image.load("static/mariachis_win_11.png")
@@ -73,7 +75,7 @@ def main_game(screen, font, screen_width, screen_height, tubitos, actual, vidas)
 
     try:
         heart_image = pygame.image.load(HEART_IMAGE_PATH).convert_alpha()
-        heart_image = pygame.transform.scale(heart_image, (96, 96))  
+        heart_image = pygame.transform.scale(heart_image, (64, 64))  
     except pygame.error:
         heart_image = None
 
@@ -90,7 +92,7 @@ def main_game(screen, font, screen_width, screen_height, tubitos, actual, vidas)
     shake_duration = 500  
     shake_amplitude = 10 
 
-    retry_button_text = "Reintentar"
+    retry_button_text = "Retry"
     retry_button_color = GRAY
     retry_button_hover_color = WHITE
     retry_button_width = 100
@@ -167,6 +169,8 @@ def main_game(screen, font, screen_width, screen_height, tubitos, actual, vidas)
                                 if check_solved():
                                     solved = True
                                     fade_start_time = pygame.time.get_ticks()
+                                    pygame.mixer.music.play()
+
                             else:
                                 if vidas[0] > 1:
                                     vidas[0] -= 1
@@ -218,7 +222,7 @@ def main_game(screen, font, screen_width, screen_height, tubitos, actual, vidas)
         lives_position = (20, 20)  
         if heart_image:
             for life in range(vidas[0]):
-                temp_surface.blit(heart_image, (lives_position[0] + life * (heart_image.get_width() - 30), lives_position[1]))
+                temp_surface.blit(heart_image, (lives_position[0] + life * (heart_image.get_width()), lives_position[1]))
         else:
             lives_text = font.render(f"Vidas: {vidas[0]}", True, BLACK)
             temp_surface.blit(lives_text, lives_position)
