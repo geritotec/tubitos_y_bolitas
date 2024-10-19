@@ -1,5 +1,37 @@
 # Tubitos y bolitas
 
+**Creado por Georgy y Gero**
+
+Paso 1.
+
+```{python}
+$ python -m venv venv
+```
+
+Paso 2.
+
+
+```{zsh}
+$ venv/Scripts/activate
+```
+
+```{pip}
+$ pip install -R requirements.txt
+```
+
+### Activar servidor
+
+```{python}
+$ python server.py
+```
+
+### Activar cliente
+
+
+```{python}
+$ python app.py
+```
+
 ## Estructura
 
 * Server: Backend utilizado para el modo multijugador.
