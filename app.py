@@ -24,7 +24,7 @@ except FileNotFoundError:
 clock = pygame.time.Clock()
 
 running = True
-current_screen = 'main_menu'
+current_screen = 'reto_normal_mode'
 
 def switch_screen(screen_name):
     global current_screen

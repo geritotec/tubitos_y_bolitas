@@ -11,7 +11,7 @@ GRAY = (200, 200, 200)
 BLACK = (0, 0, 0)
 OFFSET_X = 190
 OFFSET_Y = 150
-TUBE_WIDTH, TUBE_HEIGHT = 75, 180
+TUBE_WIDTH, TUBE_HEIGHT = 73, 180
 TUBE_MARGIN = 0
 BALLS_PER_COLOR = 4
 FLOWER_PATH = "static/flores/"
@@ -58,12 +58,14 @@ def reto_normal_mode(screen, switch_screen, font):
         if actual[0] == "main_game":
             main_game(screen, font, screen_width, screen_height, tubitos, actual, vidas)
         elif actual[0] == "limbo":
-            limbo(screen, switch_screen, font, screen_width, screen_height, actual, vidas)
+            limbo(screen, switch_screen, font, screen_width, screen_height, actual, vidas, 2)
 
         pygame.display.flip()
 
 def main_game(screen, font, screen_width, screen_height, tubitos, actual, vidas):
-    mariachis_image = pygame.image.load("static/mariachis8.png")
+    mariachis_image = pygame.image.load("static/mariachis_asleep_8.png")
+    mariachis_win_image = pygame.image.load("static/mariachis_win_8.png")
+    background_win = pygame.transform.scale(mariachis_win_image, (screen_width, screen_height))
     background = pygame.transform.scale(mariachis_image, (screen_width, screen_height))
 
     try:
@@ -116,8 +118,21 @@ def main_game(screen, font, screen_width, screen_height, tubitos, actual, vidas)
                 shaking = False
 
         temp_surface = pygame.Surface((screen_width, screen_height)).convert_alpha()
-        temp_surface.blit(background, (0, 0))
+        if solved and fade_start_time:
+            elapsed_time = pygame.time.get_ticks() - fade_start_time
+            alpha = max(255 - elapsed_time // 5, 0)  
+            if alpha == 0:
+                temp_surface.blit(background_win, (0, 0))  
+            else:
+                temp_surface.blit(background, (0, 0))  
+                win_alpha = 255 - alpha  
+                win_surface = pygame.Surface((screen_width, screen_height)).convert_alpha()
+                win_surface.blit(background_win, (0, 0)) 
+                win_surface.set_alpha(win_alpha)
+                temp_surface.blit(win_surface, (0, 0))  
 
+        else:
+            temp_surface.blit(background, (0, 0))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -191,16 +206,6 @@ def main_game(screen, font, screen_width, screen_height, tubitos, actual, vidas)
                         )
                     )
                     y_offset -= flower_image.get_height() - 183
-
-        if solved:
-            congrats_text = font.render("¡Ganaste!", True, BLACK)
-            temp_surface.blit(
-                congrats_text,
-                (
-                    screen_width // 2 - congrats_text.get_width() // 2,
-                    screen_height // 2 - congrats_text.get_height() // 2
-                )
-            )
 
         lives_position = (20, 20)
         if heart_image:
